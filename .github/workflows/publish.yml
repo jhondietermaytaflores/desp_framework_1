@@ -5,7 +5,6 @@ on:
         branches:
                 - main
 
-
 jobs:
     build-and-push:
         runs-on: ubuntu-latest
@@ -26,12 +25,12 @@ jobs:
             - name: Construir y subir imagen en dockerhub
               uses: docker/build-push-action@v5
               with: 
-                context: .
-                file: ./Dockerfile
-                push: true
-                tags: |
-                    ${{ secrets.DOCKER_USERNAME }}/mi-web-estatica:latest
-                    ${{ secrets.DOCKER_USERNAME }}/mi-web-estatica:${{github.sha}}
+                  context: .
+                  file: ./Dockerfile
+                  push: true
+                  tags: |
+                      ${{ secrets.DOCKER_USERNAME }}/mi-web-estatica:latest
+                      ${{ secrets.DOCKER_USERNAME }}/mi-web-estatica:${{github.sha}}
 
             - name: Despliegue a vm por ssh
               uses: appleboy/ssh-action@v1.0.3
@@ -40,5 +39,7 @@ jobs:
                   username: ubuntu
                   key: ${{ secrets.SSH_PRIVATE_KEY }}
                   script: |
-                      sudo docker pull ${{ secrets.DOCKER_USERNAME }}//mi-web-estatica:latest
-                      sudo docker run -d -p 80:80 --name prueba-web ${{ secrets.DOCKER_USERNAME }}//mi-web-estatica:latest
+                      sudo docker pull ${{ secrets.DOCKER_USERNAME }}/mi-web-estatica:latest
+                      sudo docker stop prueba-web || true
+                      sudo docker rm prueba-web || true
+                      sudo docker run -d -p 80:80 --name prueba-web ${{ secrets.DOCKER_USERNAME }}/mi-web-estatica:latest
