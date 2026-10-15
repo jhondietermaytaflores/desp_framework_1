@@ -24,7 +24,7 @@ function App() {
           className="counter"
           onClick={() => setCount((count) => count + 1)}
         >
-          El contadorcito es {count}   NUEVO 
+          El contadorcito es {count}   NUEVO desde
         </button>
       </section>
 
